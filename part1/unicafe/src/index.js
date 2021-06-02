@@ -13,17 +13,22 @@ const Statictis = ({good, neutral, bad, total, average, positive}) => {
   return (
   <>
     <h2>Statistics</h2>
-    <Statics text="good" value={good} />
-    <Statics text="neutral" value={neutral} />
-    <Statics text="bad" value={bad} />
-    <Statics text="all" value={total} />
-    <Statics text="average" value={average} />
-    <Statics text="positive" value={positive} />
+    <table>
+      <tbody>
+        <Statics text="good" value={good} />
+        <Statics text="bad" value={bad} />
+        <Statics text="neutral" value={neutral} />
+        <Statics text="all" value={total} />
+        <Statics text="average" value={average} />
+        <Statics text="positive" value={positive} />
+        
+      </tbody>
+    </table>
   </>
   )
 }
 
-const Statics = ({text, value}) => <p>{text} {value}</p>
+const Statics = ({text, value}) => <tr><td>{text}</td><td>{value}</td></tr>
 const Button = ({texto, handleClick}) => {
   return <button onClick={handleClick}>{texto}</button>
 }

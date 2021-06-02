@@ -1,7 +1,13 @@
 import React from 'react'
 
-const Total = ({exercises1, exercises2, exercises3}) => (
-  <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
-)
+const Total = ({parts}) => {
+  let tot = 0
+  parts.forEach(p => {
+    tot += p.exercises
+  })
+  return <p>Number of exercises {tot}</p>
+}
+  
+
 
 export default Total

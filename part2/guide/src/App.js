@@ -3,7 +3,6 @@ import PersonsForm from './components/persons-form'
 import Persons from './components/persons'
 import Filter from './components/filter'
 import axios from 'axios'
-import './App.css'
 
 
 
@@ -52,7 +51,7 @@ const App = () => {
   }
 
   return (
-    <div className="App App-header">
+    <div>
       <h2>Phonebook</h2>
       <Filter handleSearch={(search) => handleChangeSearch(search)} search={search} />
       <PersonsForm 

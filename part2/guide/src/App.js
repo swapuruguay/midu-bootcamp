@@ -13,15 +13,12 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newPhone, setNewPhone ] = useState('')
   const [search, setSearch] = useState('')
-  const [list, setList] = useState([])
-  const [message, setMessage] = useState(null)
-  const [estilo, setEstilo] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     getAll()
       .then((data) => {
           setPersons(data)
-          setList(data)
       })
   },[])
 
@@ -34,20 +31,19 @@ const App = () => {
         update({id: auxName.id, person:updatedPerson})
           .then(data => {
             setPersons(persons.map(p => p.id !== auxName.id ? p : data))
-            setList(persons.map(p => p.id !== auxName.id ? p : data))
             setNewName('')
             setNewPhone('')
-            setEstilo('info')
-            setMessage(`Updated ${data.name}`)
+            const noty = {message: `Updated ${data.name}`, type: 'info'}
+            setNotification(noty)
             setTimeout(() => {
-              setMessage(null)        
+              setNotification(null)        
             }, 5000)
           })
           .catch(() => {
-            setEstilo('error')      
-            setMessage(`Information of ${auxName.name} has already been removed from server`)
+            const noty = {message: `Information of ${auxName.name} has already been removed from server`, type: 'error'}
+            setNotification(noty)
             setTimeout(() => {
-              setMessage(null)
+              setNotification(null)
             }, 5000)
           })  
       }
@@ -56,13 +52,12 @@ const App = () => {
       create(auxName)
         .then(data => {
           setPersons(persons.concat(data))
-          setList(list.concat(data))
           setNewName('')
           setNewPhone('')
-          setEstilo('info')
-          setMessage(`Added ${data.name}`)
+          const noty = {message: `Added ${data.name}`, type: 'success'}
+          setNotification(noty)
           setTimeout(() => {
-            setMessage(null)        
+            setNotification(null)        
           }, 5000)
         })   
     }
@@ -74,22 +69,17 @@ const App = () => {
       remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
-          setList(list.filter(p => p.id !== id))
-          setEstilo('info')
-          setMessage(`Removed ${name}`)
+          const noty = {message: `Removed ${name}`, type: 'success'}
+          setNotification(noty)
           setTimeout(() => {
-            setMessage(null)        
+            setNotification(null)        
           }, 5000)
         })
     }
   }
 
   const handleChangeSearch = (e) => {
-    
-    const auxPersons = [...persons]
-    const newPersons = auxPersons.filter(p => p.name.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1)
     setSearch(e.target.value)
-    setList(newPersons)
   }
 
   const handleNameChange = (e) => {
@@ -99,11 +89,15 @@ const App = () => {
     setNewPhone(e.target.value)
   }
 
+  const personsToShow = search.length === 0 ?
+    persons : 
+    persons.filter(p => p.name.toLowerCase().indexOf(search.toLowerCase()) > 0 )
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} estilo={estilo} />
-      <Filter handleSearch={(search) => handleChangeSearch(search)} search={search} />
+      <Notification notification={notification} />
+      <Filter handleSearch={handleChangeSearch} search={search} />
       <PersonsForm 
           handleNameChange={handleNameChange}
          addPerson={addPerson} 
@@ -112,7 +106,7 @@ const App = () => {
          newPhone={newPhone}
       />
       <h2>Numbers</h2>
-      <Persons persons={list} remove={removePerson} />
+      <Persons persons={personsToShow} remove={removePerson} />
     </div>
   )
 }
